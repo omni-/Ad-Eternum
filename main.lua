@@ -5,6 +5,10 @@ local redcap_id = Isaac.GetItemIdByName("Red Cap")
 local weirdrock_id = Isaac.GetItemIdByName("Weird Rock")
 local sledge_id = Isaac.GetTrinketIdByName("Lil Sledge")
 
+local displayCustomHUD = false
+
+local TextToRender = ""
+
 function mod:cacheUpdate(player, cacheFlag)
   player = Isaac.GetPlayer(0)
   
@@ -42,15 +46,22 @@ function mod:weirdrock_update()
     local game = Game();
     local room = game:GetRoom();
     for i=0, room:GetGridSize() do
-        gridentity = room:GetGridEntity(i)
+        local gridentity = room:GetGridEntity(i)
         if gridentity ~= nil then
           local rock = gridentity:ToRock()
           if rock ~= nil and gridentity.State == 2 and gridentity.VarData ~= 100 then
             gridentity.VarData = 100
             --todo: random explosion/gas/pheremones
-            --[[action = {
-              [0] = function() gridentity.
-              }]]--
+            local pos = gridentity.Position
+            local radius = 5.5
+            local action = {
+              [0] = function(type) Game():Fart(pos, radius, player, 1.0, type) end,
+              [1] = function(type) Game():CharmFart(pos, radius, player) end,
+              [2] = function(type) Game():ButterBeanFart(pos, radius, player, true) end
+            }
+            local num = math.random(0, 3)
+            TextToRender = tostring(num)
+            action[0](num)
           end
         end
     end
@@ -99,12 +110,15 @@ function mod:update()
 end
 
 function mod:draw()
-  local player = Isaac.GetPlayer(0)
+  Isaac.RenderText(TextToRender, 50, 35, 255, 255, 255, 100)
+  if displayCustomHUD then
+    local player = Isaac.GetPlayer(0)
     Isaac.RenderText("dmg: " .. tostring(player.Damage), 10, 100, 255, 255, 255, 255)
     Isaac.RenderText("tears: " .. tostring(player.MaxFireDelay), 10, 110, 255, 255, 255, 255)
     Isaac.RenderText("speed: " .. tostring(player.MoveSpeed), 10, 120, 255, 255, 255, 255)
     Isaac.RenderText("luck: " .. tostring(player.Luck), 10, 130, 255, 255, 255, 255)
     Isaac.RenderText("shot: " .. tostring(player.ShotSpeed), 10, 140, 255, 255, 255, 255)
+  end
 end
 
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.cacheUpdate)
