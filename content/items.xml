@@ -1,0 +1,5 @@
+<items gfxroot="gfx/items/" version="1">
+	<trinket description="Break rocks!" gfx="mini sledgehammer.png" name="Lil Sledge"/>
+	<passive cache="damage firedelay" name="Red Cap" description="Buff Up!" gfx="redcap.png" hearts="2" maxhearts="2"/>
+	<passive cache="speed luck" name="Weird Rock" description="It glows..." gfx="weird rock.png" />
+</items>
