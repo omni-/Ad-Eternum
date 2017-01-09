@@ -29,18 +29,6 @@ function mod:cacheUpdate(player, cacheFlag)
   end
 end
 
-local redcap_init_effect_counter = 0
- 
-function mod:redcap_effect(player)
-  player = Isaac.GetPlayer(0)
-  if player:HasCollectible(redcap_id) then
-    if redcap_init_effect_counter < player:GetCollectibleNum(redcap_id) then
-      player:AddSoulHearts(2)
-      redcap_init_effect_counter = redcap_init_effect_counter + 1
-    end
-  end
-end
-
 local function PlaySoundAtPos(soundEffect, volume, pos)
     local soundDummy = Isaac.Spawn(EntityType.ENTITY_FLY, 0, 0, pos, Vector(0,0), Isaac.GetPlayer(0));
     local soundDummyNPC = soundDummy:ToNPC();
@@ -120,7 +108,6 @@ function mod:draw()
 end
 
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.cacheUpdate)
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.redcap_effect)
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.weirdrock_update)
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.init)
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.sledge_update)
